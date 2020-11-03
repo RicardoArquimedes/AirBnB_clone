@@ -31,9 +31,10 @@ class BaseModel:
                     pass
                 else:
                     setattr(self, key, value)
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.save()
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.save()
 
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__,
