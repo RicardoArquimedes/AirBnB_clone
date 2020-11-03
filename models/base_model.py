@@ -13,8 +13,7 @@ class BaseModel:
     attributes/methods for other classes
     """
 
-    def __init__(self, *args, **kwargs):
-        if kwargs 
+    def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = self.save()
@@ -27,7 +26,8 @@ class BaseModel:
         """
         Updates the public instance attribute updated_at
         """
-        return self.updated_at = datetime.now()
+        self.updated_at = datetime.now()
+        return self.updated_at
 
     def to_dict(self):
         """
