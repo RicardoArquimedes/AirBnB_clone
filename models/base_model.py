@@ -4,6 +4,7 @@ Base Class
 """
 import uuid
 from datetime import date, datetime
+import models
 
 
 class BaseModel:
@@ -35,6 +36,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.save()
+        models.storage.new(self)
 
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__,
@@ -45,6 +47,7 @@ class BaseModel:
         Updates the public instance attribute updated_at
         """
         self.updated_at = datetime.now()
+        models.storage.save()
         return self.updated_at
 
     def to_dict(self):
