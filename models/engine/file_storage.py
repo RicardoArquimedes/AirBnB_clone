@@ -3,7 +3,7 @@
 class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instance
 """
-from models.base_model import BaseModel
+
 import json
 
 
@@ -12,16 +12,20 @@ class FileStorage:
     """
     class FileStorage
     """
+    __file_path = "file.json"
+    __objects = {}
 
     def __init__(self):
-        self.__file_path = "file.json"
-        self.__objects = {}
+        """
+        init
+        """
+        pass
 
     def all(self):
         """
         Return dictionary objects
         """
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """
@@ -30,29 +34,28 @@ class FileStorage:
         Args:
             obj : obj.id
         """
-        if obj:
-            self.__objects[
-                "{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        FileStorage.__objects["{}.{}".format(
+            obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
         """
-        Serializes __objects to the JSON file (path: __file_path)
+        Save - serializate
         """
-        jsonfile = {}
-        with open(self.__file_path, 'w') as fd:
+        json_file = {}
+        with open(FileStorage.__file_path, 'w') as jd:
             for key, value in self.__objects.items():
-                jsonfile[key] = value.to_dict()
-            json.dump(jsonfile, fd)
+                json_file[key] = value.to_dict()
+            json.dump(json_file, jd)
 
     def reload(self):
         """
-        Deserializes the JSON file to __objects
+        reload - deseralize JSON
         """
         try:
-            with open(FileStorage.__file_path, 'w') as fd:
-                jsonfile = json.load(fd)
-                for key, value in jsonfile.items():
-                    clss = key.split(".")
-                    FileStorage.__objects[key] = globals()[clss[0]](**value)
+            with open(FileStorage.__file_path, 'r') as jsonf:
+                jdict = json.load(jsonf)
+            for key, value in jdict.items():
+                clss = key.split(".")
+                FileStorage.__objets[key] = globals()[clss[0]](**value)
         except:
             pass
