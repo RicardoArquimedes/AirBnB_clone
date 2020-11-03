@@ -55,3 +55,29 @@ class testBase(unittest.TestCase):
             bm1.created_at.isoformat(), '2017-09-28T21:03:54.052298')
         self.assertEqual(
             bm1.updated_at.isoformat(), '2017-09-28T21:03:54.052302')
+
+
+    def test_docstrings(self):
+        """Test docstrings"""
+        self.assertIsNotNone(BaseModel.__doc__)
+        self.assertIsNotNone(BaseModel.__init__.__doc__)
+        self.assertIsNotNone(BaseModel.__str__.__doc__)
+        self.assertIsNotNone(BaseModel.save.__doc__)
+        self.assertIsNotNone(BaseModel.to_dict.__doc__)
+
+    def test_base(self):
+        """Test for BaseModel
+        """
+        self.assertIsInstance(self.my_model, BaseModel)
+        self.assertEqual(self.my_model.name, "Vale")
+        self.assertEqual(self.my_model.age, 28)
+        self.assertTrue(hasattr(self.my_model, "id"))
+        self.assertTrue(hasattr(self.my_model, "created_at"))
+        self.assertTrue(hasattr(self.my_model, "updated_at"))
+        self.assertTrue(hasattr(self.my_model, "__class__"))
+        model1 = self.my_model.created_at
+        model2 = self.my_model2.created_at
+        self.assertTrue(model1 != model2)
+        model1 = self.my_model.id
+        model2 = self.my_model2.id
+        self.assertNotEqual(model1, model2)
