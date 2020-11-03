@@ -5,36 +5,27 @@ JSON file and deserializes JSON file to instance
 """
 
 import json
+from models.base_model import BaseModel
 
 
 class FileStorage:
-
     """
     class FileStorage
     """
     __file_path = "file.json"
     __objects = {}
 
-    def __init__(self):
-        """
-        init
-        """
-        pass
-
     def all(self):
         """
         Return dictionary objects
         """
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """
         Sets in __objects the obj with key <obj class name>.id
-
-        Args:
-            obj : obj.id
         """
-        FileStorage.__objects["{}.{}".format(
+        self.__objects["{}.{}".format(
             obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
@@ -42,20 +33,20 @@ class FileStorage:
         Save - serializate
         """
         json_file = {}
-        with open(FileStorage.__file_path, 'w') as jd:
-            for key, value in self.__objects.items():
-                json_file[key] = value.to_dict()
-            json.dump(json_file, jd)
+        for key, value in self.__objects.items():
+            json_file[key] = value.to_dict()
+        with open(self.__file_path, "w", encoding="utf-8") as jfile:
+            json.dump(json_file, jfile)
 
     def reload(self):
         """
         reload - deseralize JSON
         """
         try:
-            with open(FileStorage.__file_path, 'r') as jsonf:
+            with open(self.__file_path, 'r') as jsonf:
                 jdict = json.load(jsonf)
             for key, value in jdict.items():
-                clss = key.split(".")
-                FileStorage.__objets[key] = globals()[clss[0]](**value)
-        except:
+                value = eval(value["__class__"])(**value)
+                self.__objects[key] = value
+        except FileNotFoundError:
             pass
