@@ -29,8 +29,9 @@ class FileStorage:
         Args:
             obj : obj.id
         """
-        self.__objects[
-            "{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        if obj:
+            self.__objects[
+                "{}.{}".format(obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
         """
