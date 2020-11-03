@@ -3,6 +3,7 @@
 class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instance
 """
+from models.base_model import BaseModel
 import json
 
 
