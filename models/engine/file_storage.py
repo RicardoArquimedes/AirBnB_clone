@@ -3,6 +3,7 @@
 class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instance
 """
+from models.base_model import BaseModel
 import json
 
 
@@ -29,8 +30,9 @@ class FileStorage:
         Args:
             obj : obj.id
         """
-        self.__objects[
-            "{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        if obj:
+            self.__objects[
+                "{}.{}".format(obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
         """
