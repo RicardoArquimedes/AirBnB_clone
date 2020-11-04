@@ -20,6 +20,9 @@ class HBNBCommand(cmd.Cmd):
         """ This command send quit signal"""
         return True
 
+    def emptyline(self):
+        pass
+
 if __name__ == "__main__":
     """ Main method """
     HBNBCommand().cmdloop()
