@@ -1,165 +1,126 @@
 #!/usr/bin/python3
 """ Test for base models
 """
+from models.base_model import BaseModel
+from models import base_model
+#import pep8
+import datetime
 import unittest
-from models.base_model import BaseModel, __doc__ as mdoc
-from datetime import date, datetime
-import inspect
+import os
 
 
-class testBaseModel(unittest.TestCase):
-
-    """ Test base class
+class TestBaseModel(unittest.TestCase):
+    """Class for test the BaseModel class
     """
 
+    def test_docstring(self):
+        """ Method to test doctring module, class and func
+        """
+        self.assertTrue(len(base_model.__doc__) > 0)
+        self.assertTrue(len(BaseModel.__doc__) > 0)
+        for fn in dir(BaseModel):
+            self.assertTrue(len(fn.__doc__) > 0)
+
+    def test_func_docstrings(self):
+        """Test docstrings in BaseModel
+        methods"""
+        for func in dir(BaseModel):
+            with self.subTest(function=func):
+                self.assertIsNot(
+                    func[1].__doc__,
+                    None,
+                    "{:s} method needs a docstring".format(func[0])
+                )
+                self.assertTrue(
+                    len(func[1].__doc__) > 1,
+                    "{:s} method needs a docstring".format(func[0])
+                )
+
+    #def test_pep8(self):
+    #    """ Test pep8 stylecode
+    #    """
+    #    msg = "Found code style errors (and warning)."
+    #    style = pep8.StyleGuide(quiet=True)
+    #    file_base = 'models/base_model.py'
+    #    check = style.check_files([file_base])
+    #    self.assertEqual(check.total_errors, 0, msg)
+
+    def setUp(self):
+        """Test setUp Method
+        """
+        self.base1 = BaseModel()
+        self.base2 = BaseModel()
+
+    def tearDown(self):
+        """tearDown Method
+        """
+        pass
+
+    def test_init(self):
+        """ Method to test the initialization of instances
+        """
+        self.assertIs(type(self.base1.id), str)
+        self.assertIs(type(self.base1.created_at), datetime.datetime)
+        self.assertNotEqual(self.base1.id, self.base2.id)
+        self.assertEqual(self.base1.created_at, self.base1.updated_at)
+        self.assertEqual(self.base2.created_at, self.base2.updated_at)
+        self.assertNotEqual(self.base1.created_at, self.base2.created_at)
+        dict_test = {'id': '56d43177-cc5f-4d6c-a0c1-e167f8c27337',
+                     'created_at': '2017-09-28T21:03:54.052298',
+                     '__class__': 'BaseModel', 'my_number': 89,
+                     'updated_at': '2017-09-28T21:03:54.052302',
+                     'name': 'Holberton'}
+        base3 = BaseModel(**dict_test)
+        self.assertEqual(base3.id, dict_test.get("id"))
+        self.assertIs(type(base3.created_at), datetime.datetime)
+
+    def test_str(self):
+        """test __str__ method
+        """
+        output = "[BaseModel] ({}) {}".\
+            format(self.base1.id, self.base1.__dict__)
+        self.assertEqual(str(self.base1), output)
+        self.base1.name = "Holberton"
+        self.base1.my_number = 89
+        output = "[BaseModel] ({}) {}".\
+            format(self.base1.id, self.base1.__dict__)
+        self.assertEqual(str(self.base1), output)
+
     def test_to_dict(self):
-        """Test the to_dict method from BaseModel"""
-        bm1 = BaseModel()
-        bm1_dict = bm1.to_dict()
-        self.assertIsInstance(bm1_dict, dict)
-        self.assertEqual(bm1_dict["__class__"], "BaseModel")
-        self.assertEqual(str(bm1.id), bm1_dict["id"])
-        self.assertIsInstance(bm1_dict["created_at"], str)
-        self.assertIsInstance(bm1_dict["updated_at"], str)
-
-    def test_new_attributte(self):
-        """test to check if new attribute  can be added"""
-        bm1 = BaseModel()
-        bm1.name = "Miguel"
-        self.assertEqual(bm1.name, "Miguel")
-
-    def test_init_from_dict(self):
-        """test to check a new instance witk Kwargs"""
-        my_dict = {'id': 'fe96e299-dd6e-42da-9e9f-9d49d229e850',
-                   'created_at': '2017-09-28T21:03:54.052298',
-                   '__class__': 'BaseModel', 'my_number': 89,
-                   'updated_at': '2017-09-28T21:03:54.052302',
-                   'name': 'Holberton'}
-        bm1 = BaseModel(**my_dict)
-        self.assertIsInstance(bm1, BaseModel)
-        self.assertIsInstance(bm1.id, str)
-        self.assertEqual(bm1.id, 'fe96e299-dd6e-42da-9e9f-9d49d229e850')
-        self.assertIsInstance(bm1.created_at, datetime)
-        self.assertIsInstance(bm1.updated_at, datetime)
-        self.assertIsInstance(bm1.name, str)
-        self.assertEqual(bm1.name, 'Holberton')
-        self.assertEqual(
-            bm1.created_at.isoformat(), '2017-09-28T21:03:54.052298')
-        self.assertEqual(
-            bm1.updated_at.isoformat(), '2017-09-28T21:03:54.052302')
+        """ Method to test to_dict method
+        """
+        keys = ['id', 'created_at', 'updated_at', '__class__']
+        dict_b1 = self.base1.to_dict()
+        self.assertCountEqual(keys, dict_b1)
+        self.base1.name = "Holberton"
+        self.base1.my_number = 89
+        new_d = self.base1.to_dict()
+        self.assertEqual(new_d["__class__"], "BaseModel")
+        keys = ['id',
+                'created_at',
+                'updated_at',
+                '__class__',
+                'name',
+                'my_number']
+        dict_b1 = self.base1.to_dict()
+        self.assertCountEqual(keys, dict_b1)
 
     def test_save(self):
-        """Test to check each update in the storage"""
-        bm1 = BaseModel()
-        self.assertTrue(hasattr(bm1, "updated_at"))
-        bm1.save()
-        self.assertTrue(hasattr(bm1, "updated_at"))
-        t_arg = {'id': 'b6a6e15c-c67d-4312-9a75-9d084935e579',
-                 'create_at': datetime(2017, 9, 28, 21, 5, 54, 119427),
-                 'updated_at': datetime(2017, 9, 28, 21, 5, 54, 119572),
-                 'name': 'bm1'}
-        bm2 = BaseModel(t_arg)
-        bm2.save()
-        last_time = bm2.updated_at
-        bm2.save()
-        self.assertNotEqual(last_time, bm2.updated_at)
+        """test for
+        save method """
+        date_old = self.base1.updated_at
+        self.base1.save()
+        self.assertNotEqual(date_old, self.base1.updated_at)
+        date_old = self.base1.updated_at
+        self.base1.save()
+        self.assertNotEqual(date_old, self.base1.updated_at)
 
-    def test_base_init(self):
-        """
-        Testing a class BaseModel
-        """
-        instance = BaseModel()
-        self.assertIsInstance(instance, BaseModel)
-        self.assertTrue(issubclass(type(instance), BaseModel))
-        self.assertIs(type(instance), BaseModel)
-        instance.name = "Holberton"
-        instance.my_number = 89
-        self.assertEqual(instance.name, "Holberton")
-        self.assertEqual(instance.my_number, 89)
-        """
-        at_class = {
-            "id": str,
-            "created_at": datetime
-            "updated_at": datetime
-            "name": str
-            "my_number": int
-        }
-        """
-    def test_none(self):
-        """Check if a new instance is not none"""
-        bm1 = BaseModel()
-        self.assertIsNotNone(bm1)
-
-    def test_uuid(self):
-        """Check ids in the created instances"""
-        bm1 = BaseModel()
-        bm2 = BaseModel()
-        self.assertTrue(hasattr(bm1, "id"))
-        self.assertNotEqual(bm1.id, bm2.id)
-
-    def test_created_at(self):
-        """Check if the instance has created_at Atttibute"""
-        bm1 = BaseModel()
-        bm2 = BaseModel()
-        self.assertTrue(bm1, "created_at")
-        self.assertTrue(bm2, "created_at")
-
-    def test_updated_at(self):
-        """Check if the instance has created_at Atttibute"""
-        bm1 = BaseModel()
-        bm2 = BaseModel()
-        self.assertTrue(bm1, "updated_at")
-        self.assertTrue(bm2, "updated_at")
-
-    def test__str__(self):
-        """Check the string of an created instance"""
-        bm1 = BaseModel()
-        printed = "[{}] ({}) {}".format(
-            bm1.__class__.__name__, bm1.id, bm1.__dict__)
-        self.assertEqual(str(bm1), printed)
-
-    def test_module_docstring(self):
-        """
-        Tests docstring for module
-        """
-        self.assertTrue(len(mdoc) > 20)
-
-    def test_class_docstring(self):
-        """
-        Tests docstring for class
-        """
-        self.assertTrue(len(BaseModel.__doc__) > 20)
-
-    def test_methods_docstring(self):
-        """
-        Tests docstring for methods
-        """
-        methods = inspect.getmembers(BaseModel, predicate=inspect.ismethod)
-        for name, func in methods:
-            self.assertTrue(len(func.__doc__) > 20)
-        methods = inspect.getmembers(BaseModel, predicate=inspect.isfunction)
-        for name, func in methods:
-            self.assertTrue(len(func.__doc__) > 20)
-
-    def test_docstring_for_test(self):
-        """
-        Tests docstring for this test
-        """
-        self.assertTrue(len(__doc__) > 20)
-
-    def test_docstring_class_test(self):
-        """
-        Tests dosctring for class TestBaseModel
-        """
-        self.assertTrue(len(testBaseModel.__doc__) > 20)
-
-    def test_docstring_methods(self):
-        """
-        Tests docstring for all methods in TestBaseModel class
-        """
-        methods = inspect.getmembers(testBaseModel, predicate=inspect.ismethod)
-        for name, func in methods:
-            self.assertTrue(len(func.__doc__) > 20)
-
-if __name__ == '__main__':
-    pass
+    def test_permissions(self):
+        """test for the permissions
+        files"""
+        read = os.access('models/base_model.py', os.R_OK)
+        self.assertTrue(read)
+        write = os.access('models/base_model.py', os.W_OK)
+        self.assertTrue(write)
+        exe = os.access('models/base_model.py', os.X_OK)
+        self.assertTrue(exe)
