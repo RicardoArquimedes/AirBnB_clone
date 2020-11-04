@@ -19,30 +19,35 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def do_quit(self, line):
-        """Quit command to exit the program"""
+        """Quit command to exit the program
+        """
         return True
 
     def do_EOF(self, line):
-        """ This command send quit signal"""
+        """ This command send quit signal
+        """
         return True
 
     def emptyline(self):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel and saves to JSON file"""
-        if arg in classes:
-            new_object = classes[arg]()
-            new_object.save()
-            print(new_object.id)
-        elif len(arg) == 0:
+        """Creates a new instance of BaseModel
+        and saves to JSON file"""
+        args = split(arg)
+        if args == []:
             print("** class name missing **")
-        else:
+        elif args[0] not in classes:
             print("** class doesn't exist **")
+        else:
+            instance = classes.get(args[0])()
+            instance.save()
+            print(instance.id)
 
     def do_show(self, arg):
         """Prints the string representation of an instance
-        based on the class name and id"""
+        based on the class name and id
+        """
         args = split(arg)
         if args == []:
             print("** class name missing **")
@@ -134,5 +139,6 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
 if __name__ == "__main__":
-    """ Main method """
+    """ Main method
+    """
     HBNBCommand().cmdloop()
