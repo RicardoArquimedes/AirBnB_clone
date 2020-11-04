@@ -2,7 +2,7 @@
 """ Test for sile storage
 """
 import unittest
-#import pep8
+import pep8
 import json
 import os.path
 from models.engine.file_storage import FileStorage, __doc__ as mrdoc
@@ -108,6 +108,14 @@ class TestFileStorage(unittest.TestCase):
             reader = json.load(f)
         self.assertEqual(
             reader[key], TestFileStorage.storage.all()[key].to_dict())
+    
+    def test_pep8(self):
+        """Pep 8 Test
+        """
+        pep8style = pep8.StyleGuide(quiet=True)
+        result = pep8style.check_files(["models/base_model.py"])
+        self.assertEqual(result.total_errors, 0)
+
 
 if __name__ == '__main__':
     pass
