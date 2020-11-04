@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """
-Console
+Console CDM
+Module implementation
 """
+
 import cmd
 from shlex import split
 from models.base_model import BaseModel
@@ -20,7 +22,7 @@ classes = {'BaseModel': BaseModel, 'User': User, 'State': State, 'City': City,
 
 class HBNBCommand(cmd.Cmd):
 
-    """command interpreter
+    """command interpreter cmd
     """
 
     prompt = "(hbnb) "
@@ -36,6 +38,8 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
+        """send the quit signal
+        """
         pass
 
     def do_create(self, arg):
@@ -84,13 +88,12 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) == 1:
             print("** instance id missing **")
         else:
-            storage.reload()
             for key, instance in storage.all().items():
                 if instance.__class__.__name__ == args[0] and\
                         instance.id == args[1]:
-                    del(instance)
                     del(storage.all()[key])
                     storage.save()
+                    storage.reload()
                     return
             print("** no instance found **")
 
@@ -99,18 +102,19 @@ class HBNBCommand(cmd.Cmd):
         Prints all string representation of all
         instances based or not on the class name
         """
+        new_list = []
         args = split(arg)
         if args == []:
-            pass
-        elif args[0] not in classes:
-            print("** class doesn't exist **")
-        else:
-            storage.reload()
-            new_list = []
+            for key, instance in storage.all().items():
+                new_list.append(instance.__str__())
+            print(new_list)
+        elif args[0] in classes:
             for key, instance in storage.all().items():
                 if instance.__class__.__name__ == args[0]:
                     new_list.append(instance.__str__())
             print(new_list)
+        else:
+            print("** class doesn't exist **")
 
     def do_update(self, arg):
         """ Update an instance baed on the class name
