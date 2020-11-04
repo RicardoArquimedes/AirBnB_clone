@@ -1,14 +1,13 @@
 #!/usr/bin/python3
-"""
-Base Class
-"""
+"""In this module BaseModel class is created"""
+
+
+from datetime import datetime
 import uuid
-from datetime import date, datetime
 import models
 
 
 class BaseModel:
-
     """
     Base model class that defines all common
     attributes/methods for other classes
@@ -16,31 +15,28 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """
-        constructor
+        constructor init
         """
         if kwargs:
             for key, value in kwargs.items():
-                if key == 'created_at':
-                    self.created_at = datetime.strptime(
-                                                    value,
-                                                    "%Y-%m-%dT%H:%M:%S.%f")
-                elif key == 'updated_at':
-                    self.updated_at = datetime.strptime(
-                                                    value,
-                                                    "%Y-%m-%dT%H:%M:%S.%f")
-                elif key == '__class__':
-                    pass
-                else:
+                if key == "created_at":
+                    self.created_at = datetime.strptime(value,
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
+                elif key == "updated_at":
+                    self.updated_at = datetime.strptime(value,
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
+                elif not key == "__class__":
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.save()
+            self.created_at = self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+        """String of 
+        an object"""
+        return "[{}] ({}) {}".\
+            format(type(self).__name__, self.id, self.__dict__)
 
     def save(self):
         """
@@ -54,7 +50,8 @@ class BaseModel:
         returns a dictionary containing all keys/
         valus of __dict__ of the instance
         """
-        self.__dict__['__class__'] = self.__class__.__name__
-        self.__dict__['created_at'] = self.created_at.isoformat()
-        self.__dict__['updated_at'] = self.updated_at.isoformat()
-        return self.__dict__
+        dict_2 = self.__dict__.copy()
+        dict_2['__class__'] = self.__class__.__name__
+        dict_2['created_at'] = self.created_at.isoformat()
+        dict_2['updated_at'] = self.updated_at.isoformat()
+        return dict_2
