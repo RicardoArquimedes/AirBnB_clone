@@ -117,26 +117,19 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif len(args) == 1:
             print("** instance id missing **")
+        elif len(args) == 2:
+            print("** attribute name missing **")
+        elif len(args) == 3:
+            print("** value missing **")
         else:
-            storage.reload()
-            for key, instance in new_list.items():
-                if instance.__class__.__name__ == args[0] and\
-                     instance.id == args[1]:
-                    if len(args) == 2:
-                        print("** attribute name missing **")
-                        return
-                    elif len(args) == 3:
-                        print("** value missing **")
-                        return
-                    else:
-                        k_obj = args[0] + "." + args[1]
-                        print(k_obj)
-                        object = new_list[k_obj]
-                        print("-> {}".format(new_list[k_obj]))
-                        setattr(object, args[2], args[3])
-                        object.save()
-                        return
-            print("** no instance found **")
+            k_obj = args[0] + "." + args[1]
+            if k_obj in new_list:
+                object = new_list[k_obj]
+                setattr(object, args[2], args[3])
+                storage.save()
+                storage.reload()
+            else:
+                print("** no instance found **")
 
 if __name__ == "__main__":
     """ Main method
