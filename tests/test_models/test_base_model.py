@@ -3,7 +3,7 @@
 """
 from models.base_model import BaseModel
 from models import base_model
-#import pep8
+import pep8
 import datetime
 import unittest
 import os
@@ -36,14 +36,14 @@ class TestBaseModel(unittest.TestCase):
                     "{:s} method needs a docstring".format(func[0])
                 )
 
-    #def test_pep8(self):
-    #    """ Test pep8 stylecode
-    #    """
-    #    msg = "Found code style errors (and warning)."
-    #    style = pep8.StyleGuide(quiet=True)
-    #    file_base = 'models/base_model.py'
-    #    check = style.check_files([file_base])
-    #    self.assertEqual(check.total_errors, 0, msg)
+    def test_pep8(self):
+        """ Test pep8 stylecode
+        """
+        msg = "Found code style errors (and warning)."
+        style = pep8.StyleGuide(quiet=True)
+        file_base = 'models/base_model.py'
+        check = style.check_files([file_base])
+        self.assertEqual(check.total_errors, 0, msg)
 
     def setUp(self):
         """Test setUp Method
