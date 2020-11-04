@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 """ Test for base models
 """
-
-
 import unittest
 import pep8
-from models.base_model import BaseModel
+from models.base_model import BaseModel, __doc__ as mdoc
 from datetime import date, datetime
+import inspect
 
 
-class testBase(unittest.TestCase):
+class testBaseModel(unittest.TestCase):
 
     """ Test base class
     """
@@ -55,3 +54,116 @@ class testBase(unittest.TestCase):
             bm1.created_at.isoformat(), '2017-09-28T21:03:54.052298')
         self.assertEqual(
             bm1.updated_at.isoformat(), '2017-09-28T21:03:54.052302')
+
+    def test_save(self):
+        """Test to check each update in the storage"""
+        bm1 = BaseModel()
+        self.assertTrue(hasattr(bm1, "updated_at"))
+        bm1.save()
+        self.assertTrue(hasattr(bm1, "updated_at"))
+        t_arg = {'id': 'b6a6e15c-c67d-4312-9a75-9d084935e579',
+                 'create_at': datetime(2017, 9, 28, 21, 5, 54, 119427),
+                 'updated_at': datetime(2017, 9, 28, 21, 5, 54, 119572),
+                 'name': 'bm1'}
+        bm2 = BaseModel(t_arg)
+        bm2.save()
+        last_time = bm2.updated_at
+        bm2.save()
+        self.assertNotEqual(last_time, bm2.updated_at)
+
+    def test_base_init(self):
+        """
+        Testing a class BaseModel
+        """
+        instance = BaseModel()
+        self.assertIsInstance(instance, BaseModel)
+        self.assertTrue(issubclass(type(instance), BaseModel))
+        self.assertIs(type(instance), BaseModel)
+        instance.name = "Holberton"
+        instance.my_number = 89
+        self.assertEqual(instance.name, "Holberton")
+        self.assertEqual(instance.my_number, 89)
+        """
+        at_class = {
+            "id": str,
+            "created_at": datetime
+            "updated_at": datetime
+            "name": str
+            "my_number": int
+        }
+        """
+    def test_none(self):
+        """Check if a new instance is not none"""
+        bm1 = BaseModel()
+        self.assertIsNotNone(bm1)
+
+    def test_uuid(self):
+        """Check ids in the created instances"""
+        bm1 = BaseModel()
+        bm2 = BaseModel()
+        self.assertTrue(hasattr(bm1, "id"))
+        self.assertNotEqual(bm1.id, bm2.id)
+
+    def test_created_at(self):
+        """Check if the instance has created_at Atttibute"""
+        bm1 = BaseModel()
+        bm2 = BaseModel()
+        self.assertTrue(bm1, "created_at")
+        self.assertTrue(bm2, "created_at")
+
+    def test_updated_at(self):
+        """Check if the instance has created_at Atttibute"""
+        bm1 = BaseModel()
+        bm2 = BaseModel()
+        self.assertTrue(bm1, "updated_at")
+        self.assertTrue(bm2, "updated_at")
+
+    def test__str__(self):
+        """Check the string of an created instance"""
+        bm1 = BaseModel()
+        printed = "[{}] ({}) {}".format(
+            bm1.__class__.__name__, bm1.id, bm1.__dict__)
+        self.assertEqual(str(bm1), printed)
+
+    def test_module_docstring(self):
+        """
+        Tests docstring for module
+        """
+        self.assertTrue(len(mdoc) > 20)
+
+    def test_class_docstring(self):
+        """
+        Tests docstring for class
+        """
+        self.assertTrue(len(BaseModel.__doc__) > 20)
+
+    def test_methods_docstring(self):
+        """
+        Tests docstring for methods
+        """
+        methods = inspect.getmembers(BaseModel, predicate=inspect.ismethod)
+        for name, func in methods:
+            self.assertTrue(len(func.__doc__) > 20)
+        methods = inspect.getmembers(BaseModel, predicate=inspect.isfunction)
+        for name, func in methods:
+            self.assertTrue(len(func.__doc__) > 20)
+
+    def test_docstring_for_test(self):
+        """
+        Tests docstring for this test
+        """
+        self.assertTrue(len(__doc__) > 20)
+
+    def test_docstring_class_test(self):
+        """
+        Tests dosctring for class TestBaseModel
+        """
+        self.assertTrue(len(testBaseModel.__doc__) > 20)
+
+    def test_docstring_methods(self):
+        """
+        Tests docstring for all methods in TestBaseModel class
+        """
+        methods = inspect.getmembers(testBaseModel, predicate=inspect.ismethod)
+        for name, func in methods:
+            self.assertTrue(len(func.__doc__) > 20)

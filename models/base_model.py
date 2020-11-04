@@ -8,6 +8,7 @@ import models
 
 
 class BaseModel:
+
     """
     Base model class that defines all common
     attributes/methods for other classes
@@ -33,7 +34,7 @@ class BaseModel:
             models.storage.new(self)
 
     def __str__(self):
-        """String of 
+        """String of
         an object"""
         return "[{}] ({}) {}".\
             format(type(self).__name__, self.id, self.__dict__)
