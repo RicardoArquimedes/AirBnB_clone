@@ -167,3 +167,6 @@ class testBaseModel(unittest.TestCase):
         methods = inspect.getmembers(testBaseModel, predicate=inspect.ismethod)
         for name, func in methods:
             self.assertTrue(len(func.__doc__) > 20)
+
+if __name__ == '__main__':
+    pass
