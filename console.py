@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Console CDM
+Console CDM for AirBnB clone
 Module implementation
 """
 
@@ -22,7 +22,7 @@ classes = {'BaseModel': BaseModel, 'User': User, 'State': State, 'City': City,
 
 class HBNBCommand(cmd.Cmd):
 
-    """command interpreter cmd
+    """ Command interpreter cmd for AirBnB clone
     """
 
     prompt = "(hbnb) "
@@ -38,7 +38,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """send the quit signal
+        """ Quits the command prompt
         """
         pass
 
