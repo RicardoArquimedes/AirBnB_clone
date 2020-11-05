@@ -25,16 +25,18 @@ This repository contains the initial stage of a student project to build a clone
 <br>
 <br>
 <center> <h2>General Use</h2> </center>
+
 1. First clone this repository.
-3. Once the repository is cloned locate the "console.py" file and run it as follows:
+2. Once the repository is cloned locate the "console.py" file and run it as follows:
 ```
 /AirBnB_clone$ ./console.py
 ```
-4. When this command is run the following prompt should appear:
+3. When this command is run the following prompt should appear:
 ```
 (hbnb)
 ```
-5. This prompt designates you are in the "HBnB" console. There are a variety of commands available within the console program.
+4. This prompt designates you are in the "HBnB" console. There are a variety of commands available within the console program.
+
 ##### Commands
     * create - Creates an instance based on given class
     * destroy - Destroys an object based on class and UUID
@@ -50,8 +52,11 @@ Advanced syntax is implemented for the following commands:
     * update - Updates existing attributes an object based on class name and UUID
 <br>
 <br>
+
 <center> <h2>Examples</h2> </center>
+
 <h3>Primary Command Syntax</h3>
+
 ###### Example 0: Create an object
 Usage: create <class_name>
 ```
