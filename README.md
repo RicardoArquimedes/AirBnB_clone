@@ -92,3 +92,4 @@ Usage: update <class_name> <_id>
 'updated_at': datetime.datetime(2020, 2, 18, 14, 33, 45, 729907), 'first_name': 'person'}
 (hbnb)
 ```
+* **Ricardo Arquímedes Castro** | [Twitter](https://twitter.com/richardcqt) | [Github](https://github.com/RicardoArquimedes) |
